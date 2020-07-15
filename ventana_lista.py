@@ -26,10 +26,17 @@ reg = registros.listarVecinos(query)
 """ Creando la ventana con la lista de vecinos"""
 ventana = tkr.Tk()
 ventana.geometry("1200x600")
+
 q = StringVar()
 
-frameLista=LabelFrame(ventana, text="Lista Vecinos")
-frameBuscar=LabelFrame(ventana, text="Buscar...")
+frameLista=Frame(ventana)
+frameLista.config(bg="gray", bd=10, relief="sunken")
+
+lbl_lista= Label(frameLista, text="Lista de Vecinos del Condominio", bg="green")
+lbl_lista.pack()
+
+frameBuscar=Frame(ventana)
+frameBuscar.config(bg="gray", bd=10)
 
 frameBuscar.pack(fill="both", expand="yes", padx=20, pady=10)
 frameLista.pack(fill="both", expand="yes", padx=20, pady=10)
