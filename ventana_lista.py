@@ -4,7 +4,6 @@ import tkinter.ttk as tkrttk
 from lista_vecinos import *
 from tkinter import messagebox
 
-
 def lista(reg):
     listaTree.delete(*listaTree.get_children())
     for i in reg:
