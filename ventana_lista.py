@@ -42,8 +42,16 @@ frameBuscar.pack(fill="both", expand="yes", padx=20, pady=10)
 frameLista.pack(fill="both", expand="yes", padx=20, pady=10)
 
 """ Hacer TREEVIEW lista """
-listaTree = tkrttk.Treeview(frameLista, height="24")
-scrollbar = tkr.Scrollbar(listaTree, orient="vertical")
+listaTree = tkrttk.Treeview(frameLista, height="24", selectmode='browse')
+
+#listaTree.place(x=30, y=95)
+
+vsb = tkrttk.Scrollbar(frameLista, orient="vertical", command=listaTree.yview)
+vsb.place(x=1125, y=18, height=475)
+
+listaTree.configure(yscrollcommand=vsb.set)
+
+
 listaTree["columns"] = ("ID","NOMBRE","APELLIDO","PISO","APTO","TORRE")
 listaTree.column("ID", width=80, minwidth=270,stretch=tkr.NO)
 listaTree.column("NOMBRE", width=240, minwidth=270,stretch=tkr.NO)
@@ -63,9 +71,6 @@ listaTree.heading("APELLIDO", text="Apellido")
 listaTree.heading("PISO", text="Piso")
 listaTree.heading("APTO", text="Apto")
 listaTree.heading("TORRE", text="Torre")
-
-listaTree.configure(yscroll = scrollbar.set, selectmode="browse")
-scrollbar.config(command=listaTree.yview)
 
 lista(reg)
 
