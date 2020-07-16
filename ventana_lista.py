@@ -35,11 +35,11 @@ frameLista.config(bg="gray", bd=10, relief="sunken")
 lbl_lista= Label(frameLista, text="Lista de Vecinos del Condominio", bg="green")
 lbl_lista.pack()
 
-frameBuscar=Frame(ventana)
-frameBuscar.config(bg="gray", bd=10)
+frameBuscar=Frame(ventana, bd=1, bg="green")
 
-frameBuscar.pack(fill="both", expand="yes", padx=20, pady=10)
-frameLista.pack(fill="both", expand="yes", padx=20, pady=10)
+split = 0.5
+frameBuscar.place(relx=0, relheight=1, relwidth=0.2)
+frameLista.place(relx=0.201, relheight=1, relwidth=1.0)
 
 """ Hacer TREEVIEW lista """
 listaTree = tkrttk.Treeview(frameLista, height="24", selectmode='browse')
