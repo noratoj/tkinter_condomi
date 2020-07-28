@@ -30,14 +30,16 @@ class MyApp:
     """ Hacer TREEVIEW lista """
     self.listaTree = tkrttk.Treeview(frameLista, height="24", selectmode='browse')
 
-    self.listaTree["columns"] = ("ID","NOMBRE","APELLIDO","PISO","APTO","TORRE")
-    self.listaTree.column("ID", width=80, minwidth=270,stretch=tkr.NO)
+    self.listaTree["columns"] = ("ID","CEDULA","NOMBRE","APELLIDO","PISO","APTO","TORRE")
+    self.listaTree.column("ID", width=80, minwidth=270,stretch=False)
+    self.listaTree.column("CEDULA", width=80, minwidth=270,stretch=tkr.NO)
     self.listaTree.column("NOMBRE", width=240, minwidth=270,stretch=tkr.NO)
     self.listaTree.column("APELLIDO", width=240, minwidth=270,stretch=tkr.NO)
     self.listaTree.column("PISO", width=80, minwidth=270,stretch=tkr.NO)
     self.listaTree.column("APTO", width=80, minwidth=270,stretch=tkr.NO)
     self.listaTree.column("TORRE", width=260, minwidth=270,stretch=tkr.NO)
     self.listaTree.column("#0", width=0, stretch=False)
+    self.listaTree.column("ID", width=0, stretch=False)
 
     self.listaTree.pack()
     #posicionar el treevie en su lado mas a la izquierda
@@ -50,6 +52,7 @@ class MyApp:
     self.listaTree.configure(yscrollcommand=vsb.set)
 
     self.listaTree.heading("ID", text="ID")
+    self.listaTree.heading("CEDULA", text="Nro Cédula")
     self.listaTree.heading("NOMBRE", text="Nombre")
     self.listaTree.heading("APELLIDO", text="Apellido")
     self.listaTree.heading("PISO", text="Piso")
@@ -61,7 +64,8 @@ class MyApp:
     self.lista(reg, self.listaTree)
 
     #Hacer un query para llamar la información de las Tores
-    self.ref=self.referencia("TORRE")
+    self.ref = registros.referencia("TORRE")
+
     i_1=3
 
     button1 = tkr.Button(frameLista,text='Consultar Datos',command=self.show_window2)
@@ -100,13 +104,6 @@ class MyApp:
       reg = registros.listarVecinos(query)
       self.lista(reg, self.listaTree)
 
-  def referencia(self, ref_campo):
-      q2 = ref_campo
-      query = "SELECT tb1.campo_des, tb1.contador FROM tbreferencia tb1 where tabla LIKE '%"+q2+"%' order by campo_des"    
-      registros = vecinos()
-      reg_1 = registros.listarVecinos(query)
-      return(reg_1)
-
   def ShowChoice1():
       for Mostrar in self.arreglo:
           #print(variab[arreglo.index(Mostrar)].get())
@@ -136,13 +133,22 @@ class MyApp:
     from detalles_vecinos import InformacionVecinos
     #messagebox.showinfo(message=self.IdVec)
     t=tkr.Toplevel()
+    t.configure(bg="#FCFCF9", bd=10)
     t.transient(root)
     InformacionVecinos(t, self.IdVec)
 
   def lista(self,reg, listaTree1):
       listaTree1.delete(*listaTree1.get_children())
+      tag_1="0"
+      color="0"
+      ii=0
       for i in reg:
-          listaTree1.insert('','end', value=(i[0],i[2]+" "+i[3],i[4]+" "+i[5], i[28], i[15], i[29]))
+          ii+=1
+          if (i[24] % 2):
+              listaTree1.insert('','end', value=(i[0],i[1],i[2]+" "+i[3],i[4]+" "+i[5], i[28], i[15], i[29]),)
+          else:
+              listaTree1.insert('','end', value=(i[0],i[1],i[2]+" "+i[3],i[4]+" "+i[5], i[28], i[15], i[29]), tag='gray')              
+          listaTree1.tag_configure('gray', background='#cccccc')
 
 root=tkr.Tk()
 app=MyApp(root)
