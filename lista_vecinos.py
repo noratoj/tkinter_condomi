@@ -4,14 +4,14 @@ from conexion import *
 class vecinos(Conexion):
     
     def listarVecinos(self, queries):
-        cnx = self.conectar()
-        registros = cnx.cursor()
-        registros.execute(queries)
-        reg1=registros.fetchall()
-        print(len(reg1))
-        print(registros.rowcount)
-        cnx1 = self.cerrarConexion(cnx)
-        return(reg1)
+      cnx = self.conectar()
+      registros = cnx.cursor()
+      registros.execute(queries)
+      reg1=registros.fetchall()
+      #print(len(reg1))
+      #print(registros.rowcount)
+      self.cerrarConexion(cnx)
+      return(reg1)
 
     def combo_add(self, ref_campo):
       q2 = ref_campo
@@ -35,7 +35,6 @@ class vecinos(Conexion):
       return(reg_1)
 
     def obtener_desc(self, ref_campo):
-      q2 = ref_campo
       query = "SELECT tb1.campo_des FROM tbreferencia tb1 where tb1.contador= %s" % ref_campo
       registros = vecinos()
       reg_1 = registros.listarVecinos(query)

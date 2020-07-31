@@ -1,4 +1,5 @@
-from tkinter import *
+from tkinter import StringVar, IntVar, Frame, Label, Entry, Checkbutton, Button
+#from tkinter import *
 import tkinter as tkr
 import tkinter.ttk as tkrttk
 from lista_vecinos import *
@@ -106,17 +107,12 @@ class InformacionVecinos:
       self.labelframe1.configure(bg="#FCFCF9")
       self.labelframe1.grid(column=0, row=0, padx=5, pady=10)
 
-      #linea+=1
-      self.labelframe12=tkr.Frame(self.pagina1)
-      top_frame = tkr.Frame(self.pagina1, bg='cyan', width=450, height=50, pady=3)
+      top_frame = tkr.Frame(self.pagina1, bg='white', width=450, height=50, pady=3)
       center = tkr.Frame(self.pagina1, bg='blue', width=650, height=40, padx=3, pady=3)
       #btm_frame = tkr.Frame(self.pagina1, bg='white', width=450, height=45, pady=3)
       #btm_frame2 = tkr.Frame(self.pagina1, bg='lavender', width=450, height=60, pady=3)
       top_frame.grid(column=1, row=0)
       center.grid(column=0, row=1)
-      #self.labelframe12.configure(bg="red") #bg="#FCFCF9"
-      #self.labelframe12.grid(column=6, row=linea, padx=5, pady=10)
-
 
       linea=0
       self.label1=tkr.Label(self.labelframe1, text="Número de Cédula :", bg="#FCFCF9")
@@ -224,11 +220,6 @@ class InformacionVecinos:
 
       #colocar la torre, piso, apto y grupo Familiar lista
 
-      #self.pagina3 = tkr.Frame(self.cuaderno1,bg="white")
-      #self.cuaderno1.add(self.pagina3, text="Edificio/Piso/Apto")
-      #self.labelframe3=tkr.LabelFrame(self.pagina3, bg="white")        
-      #self.labelframe3.grid(column=0, row=0, padx=5, pady=10)
-
       self.lbl_edif=tkr.Label(top_frame, text="Edificio/Torre:", bg="#FCFCF9")        
       self.lbl_edif.grid(column=0, row=0, padx=4, pady=4)
       self.cmbedif=tkrttk.Combobox(top_frame, state="readonly")
@@ -323,8 +314,21 @@ class InformacionVecinos:
    
       self.lbl_medicam=tkr.Label(self.labelframe2, text="Medicamentos:")        
       self.lbl_medicam.grid(column=0, row=1, padx=4, pady=4)
-      #self.medicam=tkr.StringVar()
-      #self.prof.set(reg1[0][17])
       self.textmed=tkr.Text(self.labelframe2)
       self.textmed.config(width=130,height=10)
+      self.textmed.insert(tkr.END, reg1[0][18])
       self.textmed.grid(column=1, row=1, padx=4, pady=4)
+
+      self.lbl_observa=tkr.Label(self.labelframe2, text="Observaciones:")        
+      self.lbl_observa.grid(column=0, row=2, padx=4, pady=4)
+      self.textobs=tkr.Text(self.labelframe2)
+      self.textobs.config(width=130,height=10)
+      self.textobs.insert(tkr.END, reg1[0][19])
+      self.textobs.grid(column=1, row=2, padx=4, pady=4)
+
+      self.lbl_antece=tkr.Label(self.labelframe2, text="Antecedentes:")        
+      self.lbl_antece.grid(column=0, row=3, padx=4, pady=4)
+      self.textant=tkr.Text(self.labelframe2)
+      self.textant.config(width=130,height=10)
+      self.textant.insert(tkr.END, reg1[0][20])
+      self.textant.grid(column=1, row=3, padx=4, pady=4)
