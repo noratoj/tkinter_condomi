@@ -9,7 +9,7 @@ class VentanaSimulacion(tkr.Toplevel):
     def __init__(self, parent, usu, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.parent = parent
-        self.title("Simulación")
+        self.title("Lista de Vecinos")
         self.geometry("400x200+0+0")
         self.protocol("WM_DELETE_WINDOW", self.volver)
         

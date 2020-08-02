@@ -172,10 +172,14 @@ class InformacionVecinos:
       self.lbl_fecn.grid(column=0, row=linea, padx=4, pady=4)
       self.fecn=tkr.StringVar()
       self.fecn.set(reg1[0][16])
-      fecha = datetime.strftime(reg1[0][16], '%m-%d-%Y')
-      fecha = datetime.strptime(fecha, '%m-%d-%Y')
-      formato = '%d/%m/%Y'
-      fecha = datetime.strftime(fecha, formato)
+      #print(reg1[0][16])
+      if reg1[0][16] != None:
+        fecha = datetime.strftime(reg1[0][16], '%m-%d-%Y')
+        fecha = datetime.strptime(fecha, '%m-%d-%Y')
+        formato = '%d/%m/%Y'
+        fecha = datetime.strftime(fecha, formato)
+      else:
+        fecha = ""
       #print(type(fecha))
       #print(fecha)
       self.fecn.set(fecha)
