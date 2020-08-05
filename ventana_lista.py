@@ -78,9 +78,14 @@ class VentanaSimulacion(tkr.Toplevel):
         #Hacer un query para llamar la información de las Tores
         self.ref = registros.referencia("TORRE")
 
+        #Boton para consultar datos de la lista de vecinos seleccionado
         button1 = tkr.Button(frameLista,text='Consultar Datos',command=self.show_window2)
         button1.pack()
         button1.place(x=90, y=520, height=20)
+
+        buttonagregfam = tkr.Button(frameLista,text='Crear grupo Familiar',command=self.show_grupofamnuevo)
+        buttonagregfam.pack()
+        buttonagregfam.place(x=220, y=520, height=20)
 
         #para armar el buscar por nombre, apllido, cedula, torre, piso
         self.lbl = Label(frameBuscar, text="Buscar: ")
@@ -116,7 +121,7 @@ class VentanaSimulacion(tkr.Toplevel):
         ii=0
         for i in reg:
             ii+=1
-            if (i[24] % 2):
+            if (i[23] % 2):
                 listaTree1.insert('','end', value=(i[0],i[1],i[2]+" "+i[3],i[4]+" "+i[5], i[28], i[15], i[29]),)
             else:
                 listaTree1.insert('','end', value=(i[0],i[1],i[2]+" "+i[3],i[4]+" "+i[5], i[28], i[15], i[29]), tag='gray')              
@@ -150,9 +155,35 @@ class VentanaSimulacion(tkr.Toplevel):
             messagebox.showinfo(parent=self, message="Debe seleccionar vecino a consultar")
             return
         
+        #reaizar el select de la línea seleccionada
+        query = "SELECT * FROM vecinos_temporal where id_vecino = '"+self.IdVec+"'"
+        self.registros = vecinos()
+        reg = self.registros.listarVecinos(query)
+        
+        #hacer matriz-arreglo con la información del select
+        datos=[]
+        for i in reg:
+            datos.append(i)
+
+        #print(len(datos[0]))
+
+
+        from detalles_vecinos import InformacionVecinos
+        t=tkr.Toplevel()
+        t.configure(bg="#FCFCF9", bd=10)
+        t.transient(self)
+        InformacionVecinos(t, self.IdVec, datos)
+
+    def show_grupofamnuevo(self):
+
+        datos=[["" for j in range(28)] for i in range(1)]
+
+        #print(datos[0][15])
+
+        self.IdVec=0
         from detalles_vecinos import InformacionVecinos
         #messagebox.showinfo(message=self.IdVec)
         t=tkr.Toplevel()
         t.configure(bg="#FCFCF9", bd=10)
         t.transient(self)
-        InformacionVecinos(t, self.IdVec)
+        InformacionVecinos(t, str(self.IdVec), datos)

@@ -19,7 +19,6 @@ class MainWindow(tk.Frame):
         # Variables
         self.usuario_var = tk.StringVar()
         self.passw_var = tk.StringVar()
-
         # Caja texto
         linea=1
         self.label1=tk.Label(self, text="Usuario :")
@@ -32,6 +31,9 @@ class MainWindow(tk.Frame):
         self.label1.grid(column=0, row=linea, padx=10, pady=10)
         self.entrypass=tk.Entry(self, textvariable=self.passw_var, show="*")
         self.entrypass.grid(column=1, row=linea, padx=10, pady=10)
+
+        self.usuario_var.set("7996640")
+        self.passw_var.set("7996640")
 
         # Botones Limpiar y Simular
         boton = tk.Button(self, text="Regstrarse", width=20, command=self.valores_limpiar)
