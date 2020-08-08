@@ -166,7 +166,7 @@ class VentanaSimulacion(tkr.Toplevel):
         resp=messagebox.askyesno(message="¿Desea Eliminar a: "+ nomb, title="Eliminar registro")
         
         if resp:
-            #reaizar el select de la línea seleccionada
+            #reaizar el select de la línea seleccionada 
             datos=(self.IdVec,)
             self.registros = vecinos()
             eliminado=self.registros.eliminarreg(datos)
