@@ -47,25 +47,51 @@ class InformacionVecinos():
     texto=self.entrynom1.get()
 
     if texto=="":
-      messagebox.showinfo(parent=self.cuaderno1, message="1er Nombre no debe estar vacio")
+      messagebox.showinfo(parent=self.cuaderno1, title="Validación de 1er Nombre", message="1er Nombre no debe estar vacio")
       self.entrynom1.focus()
       return False
 
     texto=self.entryapell1.get()
 
     if texto=="":
-      messagebox.showinfo(parent=self.cuaderno1, message="1er Apellido no debe estar vacio")
+      messagebox.showinfo(parent=self.cuaderno1, title="Validación de 1er Apellido", message="1er Apellido no debe estar vacio")
       self.entryapell1.focus()
       return False
 
     texto=self.entryapto.get()
 
     if texto=="":
-      messagebox.showinfo(parent=self.cuaderno1, message="Debe asignar el número o sitio del apartamento o ubicación")
+      messagebox.showinfo(parent=self.cuaderno1, title="Validación de Sitio o Apartamento", message="Debe asignar el número o sitio del apartamento o ubicación")
       self.entryapto.focus()
       return False
 
     return True
+
+  def convertirMayus(self, event):
+  
+    self.nom1.set(self.entrynom1.get().upper())
+    self.nom2.set(self.entrynom2.get().upper())
+    self.apellido1.set(self.entryapell1.get().upper())
+    self.apellido2.set(self.entryapell2.get().upper())
+    self.prof.set(self.entryprof.get().upper())
+    self.apto.set(self.entryapto.get().upper())
+    #self.textant.get("1.0", 'end').upper()
+
+  def inicialiarVariables(self):  
+    self.nom1.set("")
+    self.nom2.set("")
+    self.apellido1.set("")
+    self.apellido2.set("")
+    self.prof.set("")
+    self.ced.set("")
+    self.tel1.set("")
+    self.tel2.set("")
+    self.fecn.set("")
+    self.sexo.set("")      
+    self.button3.place_forget()
+    self.button4 = tkr.Button(self.pagina1,text='Grabar Integrante', command=self.InsertInteg)
+    self.button4.place(x=900, y=530, height=20)
+
 
   def formatofecha(self, event):
     #tener lista de meses y días en números para validar a fecha
@@ -126,10 +152,68 @@ class InformacionVecinos():
       self.entryfecn.focus()
       return
 
+  def selectItem(self, event):
+      curItem = self.listaTree_rol.selection()
+      for i in curItem:
+          #print (self.listaTree.item(i,"values")[0])
+          self.vecino1=self.listaTree_rol.item(i,"values")[0]
+          messagebox.showinfo(message=self.vecino1)
+
+          #reaizar el select de la línea seleccionada
+          query = "SELECT * FROM vecinos_temporal where id_vecino = '"+self.vecino1+"'"
+          self.registros = vecinos()
+          reg = self.registros.listarVecinos(query)
+          self.ced.set(reg[0][1])
+          self.nom1.set(reg[0][2])
+          self.nom2.set(reg[0][3])
+          self.apellido1.set(reg[0][4])
+          self.apellido2.set(reg[0][5])
+          self.prof.set(reg[0][17])
+          self.tel1.set(reg[0][8])
+          self.tel2.set(reg[0][9])
+          self.fecn.set(reg[0][16])
+          #print(reg1[0][16])
+          if reg[0][16] != None and reg[0][16] != "" :
+            fecha = datetime.strftime(reg[0][16], '%m-%d-%Y')
+            fecha = datetime.strptime(fecha, '%m-%d-%Y')
+            formato = '%d/%m/%Y'
+            fecha = datetime.strftime(fecha, formato)
+          else:
+            fecha = ""
+          #print(type(fecha))
+          #print(fecha)
+          self.fecn.set(fecha)
+          self.sexo.set(reg[0][26])      
+
+
+
   def updateVec(self):
+    texto=self.entryced.get()
+    if texto!="":
+      query = "SELECT * FROM vecinos_temporal tb1 where tb1.nro_cedula= %s" % texto
+      string4=self.registros.listarVecinos(query)
+      if len(string4) == 1:
+          if int(string4[0][0]) != int(self.vecino1):
+            messagebox.showinfo(parent=self.cuaderno1, title="Validación de ID-Cédula", message="NO debe existir un mismo número de ID(Cédula)")
+            self.entryced.focus()
+            return False
+
     updateAction=2
     self.informacionGrabar(updateAction)
   
+  def InsertInteg(self):
+    texto=self.entryced.get()
+    if texto!="":
+      query = "SELECT * FROM vecinos_temporal tb1 where tb1.nro_cedula= %s" % texto
+      string4=self.registros.listarVecinos(query)
+      if len(string4) == 1:
+          messagebox.showinfo(parent=self.cuaderno1, title="Validación de ID-Cédula", message="NO debe existir un mismo número de ID(Cédula)")
+          self.entryced.focus()
+          return False
+
+    updateAction=3
+    self.informacionGrabar(updateAction)
+
   def InsertVec(self):
     updateAction=1
     self.informacionGrabar(updateAction)
@@ -148,12 +232,6 @@ class InformacionVecinos():
     if self.fecn.get() != "":
         formato = '%Y/%m/%d'
         fecha_ins = datetime.strftime(datetime.strptime(self.fecn.get(),'%d/%m/%Y'), formato)
-
-        #fecha_ins = datetime.strptime(self.fecn.get(), '%d/%m/%Y')
-        #fecha_ins = datetime.strftime(self.fecn.get(), '%d/%m/%Y')
-        #formato = '%Y/%m/%d'
-        #fecha_ins = datetime.strftime(fecha_ins, formato)
-      #fecha_ins = datetime.strftime(fecha_ins, '%m-%d-%Y')
     else:
       fecha_ins = "1900-01-01"
 
@@ -172,7 +250,15 @@ class InformacionVecinos():
            self.entrytel1.get(), self.entrytel2.get(), fecha_ins, self.entryemail.get(), 
            self.entryprof.get(), self.sexo.get(),edif,piso,self.entryapto.get(),rol,self.grupo_familiar,
            self.textmed.get("1.0", 'end'), self.textobs.get("1.0", 'end'), self.textant.get("1.0", 'end'),self.vecino1)
-    
+
+    if action ==3: #insert integrante
+      datos = (self.ced.get(), self.entrynom1.get(), self.entrynom2.get(), self.entryapell1.get(), self.entryapell2.get(),
+           self.entrytel1.get(), self.entrytel2.get(), fecha_ins, self.entryemail.get(), 
+           self.entryprof.get(), self.sexo.get(),edif,piso,self.entryapto.get(),rol,self.grupo_familiar,
+           self.textmed.get("1.0", 'end'), self.textobs.get("1.0", 'end'), self.textant.get("1.0", 'end'))          
+      action =1
+
+
 
     if action ==1:
       self.registros.insertvec(datos)
@@ -182,13 +268,12 @@ class InformacionVecinos():
       self.vecino1=int(string4[0][0])
       print(self.vecino1)
     
-    if action ==2:
-      print(datos)
+    if action ==2: 
       self.registros.updatevec(datos)
-      messagebox.showinfo(parent=self.cuaderno1, title="Guardando Información", message="Registro creado satisfactoriamente")
+      messagebox.showinfo(parent=self.cuaderno1, title="Guardando Información", message="Información actualizada satisfactoriamente")
 
     query = "SELECT vec.*, tb1.campo_des FROM vecinos_temporal vec left join tbreferencia tb1 on vec.id_miembro = tb1.contador where vec.grupo_fam= %s" % self.grupo_familiar
-    print(query)
+
     reg = self.registros.listarVecinos(query)
     self.lista(reg, self.listaTree_rol)
 
@@ -197,7 +282,7 @@ class InformacionVecinos():
   def lista(self,reg, listaTree1):
     listaTree1.delete(*listaTree1.get_children())
     for i in reg:
-        listaTree1.insert('','end', value=(i[0],i[2]+" "+i[3],i[4]+" "+i[5], i[28]))
+        listaTree1.insert('','end', value=(i[0],i[1],i[2]+" "+i[3],i[4]+" "+i[5], i[28]))
 
   def callbackFunc(self,event):
     pass
@@ -221,8 +306,8 @@ class InformacionVecinos():
       self.label1.grid(column=0, row=linea, padx=4, pady=4)
       self.ced=tkr.StringVar()
       self.ced.set(reg1[0][1])
-      self.entrynom1=tkr.Entry(self.labelframe1, textvariable=self.ced)
-      self.entrynom1.grid(column=1, row=linea, padx=4, pady=4)
+      self.entryced=tkr.Entry(self.labelframe1, textvariable=self.ced)      
+      self.entryced.grid(column=1, row=linea, padx=4, pady=4)
 
       linea+=1
       self.label1=tkr.Label(self.labelframe1, text="1er Nombre :", bg="#FCFCF9")
@@ -230,6 +315,7 @@ class InformacionVecinos():
       self.nom1=tkr.StringVar()
       self.nom1.set(reg1[0][2])
       self.entrynom1=tkr.Entry(self.labelframe1, textvariable=self.nom1)
+      self.entrynom1.bind("<FocusOut>", self.convertirMayus)
       self.entrynom1.grid(column=1, row=linea, padx=4, pady=4)
 
       self.label2=tkr.Label(self.labelframe1, text="2do Nombre :", bg="#FCFCF9")
@@ -237,6 +323,7 @@ class InformacionVecinos():
       self.nom2=tkr.StringVar()
       self.nom2.set(reg1[0][3])
       self.entrynom2=tkr.Entry(self.labelframe1, textvariable=self.nom2)
+      self.entrynom2.bind("<FocusOut>", self.convertirMayus)
       self.entrynom2.grid(column=3, row=linea, padx=4, pady=4)
 
       linea+=1
@@ -245,6 +332,7 @@ class InformacionVecinos():
       self.apellido1=tkr.StringVar()
       self.apellido1.set(reg1[0][4])
       self.entryapell1=tkr.Entry(self.labelframe1, textvariable=self.apellido1)
+      self.entryapell1.bind("<FocusOut>", self.convertirMayus)
       self.entryapell1.grid(column=1, row=linea, padx=4, pady=4)
 
       self.lbl_ape2=tkr.Label(self.labelframe1, text="2do Apellido:", bg="#FCFCF9")        
@@ -252,6 +340,7 @@ class InformacionVecinos():
       self.apellido2=tkr.StringVar()
       self.apellido2.set(reg1[0][5])
       self.entryapell2=tkr.Entry(self.labelframe1, textvariable=self.apellido2)
+      self.entryapell2.bind("<FocusOut>", self.convertirMayus)
       self.entryapell2.grid(column=3, row=linea, padx=4, pady=4)
 
       linea+=1
@@ -304,6 +393,7 @@ class InformacionVecinos():
       self.prof=tkr.StringVar()
       self.prof.set(reg1[0][17])
       self.entryprof=tkr.Entry(self.labelframe1, textvariable=self.prof)
+      self.entryprof.bind("<FocusOut>", self.convertirMayus)
       self.entryprof.grid(column=1, row=linea, padx=4, pady=4)
 
       linea+=1
@@ -368,6 +458,7 @@ class InformacionVecinos():
       self.apto=tkr.StringVar()
       self.apto.set(reg1[0][15])
       self.entryapto=tkr.Entry(top_frame, textvariable=self.apto)
+      self.entryapto.bind("<FocusOut>", self.convertirMayus)
       self.entryapto.grid(column=1, row=2, padx=4, pady=4)
 
       #crear la estructura familiar y el cargo
@@ -415,31 +506,46 @@ class InformacionVecinos():
       """ Hacer TREEVIEW lista """
       self.listaTree_rol = tkrttk.Treeview(self.labelframe5, height="14", selectmode='browse')
 
-      self.listaTree_rol["columns"] = ("ID","NOMBRE","APELLIDO","ROL")
-      self.listaTree_rol.column("ID", width=80, minwidth=270,stretch=tkr.NO)
+      self.listaTree_rol["columns"] = ("ID","CEDULA", "NOMBRE","APELLIDO","ROL")
+      self.listaTree_rol.column("ID", width=80, minwidth=270,stretch=False)
+      self.listaTree_rol.column("CEDULA", width=80, minwidth=270,stretch=tkr.NO)
       self.listaTree_rol.column("NOMBRE", width=240, minwidth=270,stretch=tkr.NO)
       self.listaTree_rol.column("APELLIDO", width=240, minwidth=270,stretch=tkr.NO)
       self.listaTree_rol.column("ROL", width=80, minwidth=270,stretch=tkr.NO)
       self.listaTree_rol.column("#0", width=0, stretch=False)
+      self.listaTree_rol.column("ID", width=0, stretch=False)
 
       self.listaTree_rol.grid(column=0, row=2, padx=4, pady=4)
 
-      #Boton para Grabar la información
-      button1 = tkr.Button(self.pagina1,text='Actualizar', command=self.updateVec)
-      button1.place(x=800, y=530, height=20)
+      #Boton para actualizar la información
+      self.button1 = tkr.Button(self.pagina1,text='Actualizar', command=self.updateVec)
+      self.button1.place(x=800, y=530, height=20)
 
-      button1 = tkr.Button(self.pagina1,text='Grabar', command=self.InsertVec)
-      button1.place(x=900, y=530, height=20)
+      self.button2 = tkr.Button(self.pagina1,text='Grabar', command=self.InsertVec)
+      self.button2.place(x=900, y=530, height=20)
 
-      button1 = tkr.Button(self.pagina1,text='Salir', command=self.volver)
-      button1.place(x=970, y=530, height=20)
+      self.button3 = tkr.Button(self.pagina1,text='Nuevo Integrante', command=self.inicialiarVariables)
+      self.button3.place(x=900, y=530, height=20)
+
+      if self.vecino1 == 0:
+        self.button1.place_forget()
+        self.button3.place_forget()
+      
+      if self.vecino1 != 0:
+        self.button2.place_forget()        
+
+      self.button1 = tkr.Button(self.pagina1,text='Salir', command=self.volver)
+      self.button1.place(x=680, y=530, height=20)
 
       #button1.grid(row=5, column=2)
 
       self.listaTree_rol.heading("ID", text="ID")
+      self.listaTree_rol.heading("CEDULA", text="Nro de Cédula")
       self.listaTree_rol.heading("NOMBRE", text="Nombre")
       self.listaTree_rol.heading("APELLIDO", text="Apellido")
       self.listaTree_rol.heading("ROL", text="Rol")
+
+      self.listaTree_rol.bind('<ButtonRelease-1>', self.selectItem)
 
       query = "SELECT vec.*, tb1.campo_des FROM vecinos_temporal vec left join tbreferencia tb1 on vec.id_miembro = tb1.contador where vec.grupo_fam= %s" % reg1[0][23]
       reg = self.registros.listarVecinos(query)
@@ -455,6 +561,7 @@ class InformacionVecinos():
       self.textmed=tkr.Text(self.labelframe2)
       self.textmed.config(width=130,height=10)
       self.textmed.insert(tkr.END, reg1[0][18])
+      self.textmed.bind("<FocusOut>", self.convertirMayus)
       self.textmed.grid(column=1, row=1, padx=4, pady=4)
 
       self.lbl_observa=tkr.Label(self.labelframe2, text="Observaciones:")        
@@ -462,6 +569,7 @@ class InformacionVecinos():
       self.textobs=tkr.Text(self.labelframe2)
       self.textobs.config(width=130,height=10)
       self.textobs.insert(tkr.END, reg1[0][19])
+      self.textobs.bind("<FocusOut>", self.convertirMayus)
       self.textobs.grid(column=1, row=2, padx=4, pady=4)
 
       self.lbl_antece=tkr.Label(self.labelframe2, text="Antecedentes:")        
@@ -469,6 +577,7 @@ class InformacionVecinos():
       self.textant=tkr.Text(self.labelframe2)
       self.textant.config(width=130,height=10)
       self.textant.insert(tkr.END, reg1[0][20])
+      self.textant.bind("<FocusOut>", self.convertirMayus)
       self.textant.grid(column=1, row=3, padx=4, pady=4)
       self.grupo_familiar=reg1[0][23]
       self.entrynom1.focus()

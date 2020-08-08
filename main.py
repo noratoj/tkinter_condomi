@@ -13,6 +13,9 @@ class MainWindow(tk.Frame):
         self.parent.title("Autenticar usuario")
         self.configure(background='light grey') # Color de Fondo
 
+        #permitir la tecla intro / enter dentro de la ventana
+        parent.bind("<Return>", self.focus_next_window)
+
         lbl_lista= tk.Label(self, text="Usuario a Autenticarse", bg="LightGreen", width = "40", height="2", font=("Calibri",13))
         lbl_lista.grid(column=0, row=0, columnspan=2)
 
@@ -40,7 +43,10 @@ class MainWindow(tk.Frame):
         boton.grid(row=4, column=0, padx=20, pady=30)
         boton = tk.Button(self, text="Validar Usuario", width=20, command=self.validar)
         boton.grid(row=4, column=1, padx=20, pady=30)
+        self.entryuser.focus()
 
+    def focus_next_window(self,event):
+        event.widget.tk_focusNext().focus()
 
     def valores_limpiar(self):
         self.usuario_var.set("")

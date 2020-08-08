@@ -87,6 +87,12 @@ class VentanaSimulacion(tkr.Toplevel):
         buttonagregfam.pack()
         buttonagregfam.place(x=220, y=520, height=20)
 
+        #Boton para eliminar datos de la lista de vecinos seleccionado
+        button1elim= tkr.Button(frameLista,text='Eliminar',command=self.EliminarVec)
+        button1elim.pack()
+        button1elim.place(x=380, y=520, height=20)
+
+
         #para armar el buscar por nombre, apllido, cedula, torre, piso
         self.lbl = Label(frameBuscar, text="Buscar: ")
         self.lbl.grid(row=0)
@@ -146,7 +152,29 @@ class VentanaSimulacion(tkr.Toplevel):
             #print(variab[arreglo.index(Mostrar)].get())
             if self.variab[self.arreglo.index(Mostrar)].get()==1:
                 contador=(self.ref[self.arreglo.index(Mostrar)])[1]
-                print(contador)
+
+    def EliminarVec(self):
+        
+        if self.IdVec==0:
+            messagebox.showinfo(parent=self, message="Debe seleccionar vecino a eliminar")
+            return
+
+        curItem = self.listaTree.selection()
+        for i in curItem:
+            nomb=self.listaTree.item(i,"values")[2] + " " + str(self.listaTree.item(i,"values")[3])
+
+        resp=messagebox.askyesno(message="¿Desea Eliminar a: "+ nomb, title="Eliminar registro")
+        
+        if resp:
+            #reaizar el select de la línea seleccionada
+            datos=(self.IdVec,)
+            self.registros = vecinos()
+            eliminado=self.registros.eliminarreg(datos)
+            if eliminado == 1:
+                messagebox.showinfo(parent=self, message="Eliminado satisfactoriamente"+ " " + nomb)
+                self.listaTree.delete(curItem)
+            else:
+                messagebox.showinfo(parent=self, message="No se pudo eliminar"+ " " + nomb)
 
 
     def show_window2(self):

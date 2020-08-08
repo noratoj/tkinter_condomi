@@ -71,3 +71,12 @@ class vecinos(Conexion):
       registros.execute(sql,datos)
       cnx.commit()
       self.cerrarConexion(cnx)
+
+    def eliminarreg(self, datos):
+      cnx = self.conectar()
+      sql = "delete from vecinos_temporal where id_vecino=%s"
+      registros = cnx.cursor()
+      registros.execute(sql,datos)
+      cnx.commit()
+      self.cerrarConexion(cnx)
+      return registros.rowcount #retorna cantidad de filas eliminadas...debe ser 1
