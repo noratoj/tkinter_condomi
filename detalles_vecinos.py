@@ -12,6 +12,11 @@ class InformacionVecinos():
   vecino1=0
   def __init__(self,master, vecino, datos):
     global master_1, vecino1, grupo_familiar
+    self.tamagnoletra = ("Arial",10,"bold")
+    self.back1="#525252" #8cabbe
+    self.button1="#59c9b9"
+    self.fore="white"
+    self.foreblack="black"
     self.registros = vecinos()
     if vecino != "0":
       master.title("Datos de:"+datos[0][2]+" "+datos[0][4])
@@ -20,13 +25,14 @@ class InformacionVecinos():
       vecino1=0
       master.title("Creación de Usuario")
 
+    master.configure(background=self.back1)
     #permitir la tecla intro / enter dentro de la ventana
     master.bind("<Return>", self.focus_next_window)
     master_1 = master
     #master.protocol("WM_DELETE_WINDOW", self.volver)
 
     self.cuaderno1 = tkrttk.Notebook(master)        
-    tkrttk.Style().configure("TNotebook", background="white")
+    tkrttk.Style().configure("TNotebook", background=self.back1)
     self.cuaderno1.grid(column=0, row=0, padx=10, pady=10)
     self.carga_datos(datos)
 
@@ -89,7 +95,7 @@ class InformacionVecinos():
     self.fecn.set("")
     self.sexo.set("")      
     self.button3.place_forget()
-    self.button4 = tkr.Button(self.pagina1,text='Grabar Integrante', command=self.InsertInteg)
+    self.button4 = tkr.Button(self.pagina1,text='Grabar Integrante', command=self.InsertInteg,highlightbackground=self.back1,bg="#59c9b9", fg=self.foreblack, font=self.tamagnoletra)
     self.button4.place(x=900, y=530, height=20)
 
 
@@ -111,7 +117,7 @@ class InformacionVecinos():
       return
 
     if len(texto)>10:
-      messagebox.showinfo(parent=self.cuaderno1, message="No es una fecha válida")
+      messagebox.showinfo(parent=self.cuaderno1, title="Validar fecha", message="No es una fecha válida")
       self.entryfecn.focus()
       return
 
@@ -126,24 +132,24 @@ class InformacionVecinos():
           caract_11=1
 
     if caract_11==1: 
-      messagebox.showinfo(parent=self.cuaderno1, message="No debe contener caracteres")
+      messagebox.showinfo(parent=self.cuaderno1, title="Validar fecha", message="No debe contener caracteres")
       self.entryfecn.focus()
       return
 
     if caract_1 != 2: 
-      messagebox.showinfo(parent=self.cuaderno1, message="No esta en el formato de Fecha: D/M/AAAA")
+      messagebox.showinfo(parent=self.cuaderno1, title="Validar fecha", message="No esta en el formato de Fecha: D/M/AAAA")
       self.entryfecn.focus()
       return
 
     day, month, year = texto.split('/')
 
     if len(year) != 4:
-      messagebox.showinfo(parent=self.cuaderno1, message="En el formato de Fecha: D/M/AAAA, el año no es correcto: 4 dígitos")
+      messagebox.showinfo(parent=self.cuaderno1, title="Validar fecha", message="En el formato de Fecha: D/M/AAAA, el año no es correcto: 4 dígitos")
       self.entryfecn.focus()
       return
 
     if int(day) not in dayList: # valida sí existe
-      messagebox.showinfo(parent=self.cuaderno1, message="En el formato de Fecha: D/M/AAAA, el día no es el rango")
+      messagebox.showinfo(parent=self.cuaderno1, title="Validar fecha", message="En el formato de Fecha: D/M/AAAA, el día no es el rango")
       self.entryfecn.focus()
       return
 
@@ -155,9 +161,8 @@ class InformacionVecinos():
   def selectItem(self, event):
       curItem = self.listaTree_rol.selection()
       for i in curItem:
-          #print (self.listaTree.item(i,"values")[0])
           self.vecino1=self.listaTree_rol.item(i,"values")[0]
-          messagebox.showinfo(message=self.vecino1)
+          #messagebox.showinfo(message=self.vecino1)
 
           #reaizar el select de la línea seleccionada
           query = "SELECT * FROM vecinos_temporal where id_vecino = '"+self.vecino1+"'"
@@ -207,7 +212,7 @@ class InformacionVecinos():
       query = "SELECT * FROM vecinos_temporal tb1 where tb1.nro_cedula= %s" % texto
       string4=self.registros.listarVecinos(query)
       if len(string4) == 1:
-          messagebox.showinfo(parent=self.cuaderno1, title="Validación de ID-Cédula", message="NO debe existir un mismo número de ID(Cédula)")
+          messagebox.showinfo(parent=self.cuaderno1, title="Validación de ID-Cédula", message="No debe existir un mismo número de ID(Cédula)")
           self.entryced.focus()
           return False
 
@@ -288,21 +293,21 @@ class InformacionVecinos():
     pass
 
   def carga_datos(self,reg1):
-      self.pagina1 = tkr.Frame(self.cuaderno1, bg="white")
+      self.pagina1 = tkr.Frame(self.cuaderno1, background=self.back1)
       self.cuaderno1.add(self.pagina1, text="Datos Básicos")
       self.labelframe1=tkr.LabelFrame(self.pagina1)        
-      self.labelframe1.configure(bg="#FCFCF9")
+      self.labelframe1.configure( background=self.back1)
 
       self.labelframe1.grid(column=0, row=0, padx=5, pady=10)
 
-      top_frame = tkr.Frame(self.pagina1, bg='white', width=450, height=50, pady=3)
-      center = tkr.Frame(self.pagina1, bg='blue', width=650, height=40, padx=3, pady=3)
-      tkr.Label(center, text="Grupo Familiar", width=30).grid(row=0, column=0)
+      top_frame = tkr.Frame(self.pagina1, background=self.back1, width=450, height=50, pady=3)
+      center = tkr.Frame(self.pagina1, bg=self.back1, width=650, height=40, padx=3, pady=3)
+      tkr.Label(center, text="Grupo Familiar", bg=self.button1, width = "30", height="0", font=("Arial",12,"bold")).grid(row=0, column=0)
       top_frame.grid(column=1, row=0)
       center.grid(column=0, row=1)
 
       linea=0
-      self.label1=tkr.Label(self.labelframe1, text="Número de Cédula :", bg="#FCFCF9")
+      self.label1=tkr.Label(self.labelframe1,text="Número de Cédula :", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.label1.grid(column=0, row=linea, padx=4, pady=4)
       self.ced=tkr.StringVar()
       self.ced.set(reg1[0][1])
@@ -310,7 +315,7 @@ class InformacionVecinos():
       self.entryced.grid(column=1, row=linea, padx=4, pady=4)
 
       linea+=1
-      self.label1=tkr.Label(self.labelframe1, text="1er Nombre :", bg="#FCFCF9")
+      self.label1=tkr.Label(self.labelframe1,text="1er Nombre :", bg=self.back1, fg=self.fore, font=self.tamagnoletra, width=20, anchor="e")
       self.label1.grid(column=0, row=linea, padx=4, pady=4)
       self.nom1=tkr.StringVar()
       self.nom1.set(reg1[0][2])
@@ -318,7 +323,7 @@ class InformacionVecinos():
       self.entrynom1.bind("<FocusOut>", self.convertirMayus)
       self.entrynom1.grid(column=1, row=linea, padx=4, pady=4)
 
-      self.label2=tkr.Label(self.labelframe1, text="2do Nombre :", bg="#FCFCF9")
+      self.label2=tkr.Label(self.labelframe1, text="2do Nombre :", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.label2.grid(column=2, row=linea, padx=4, pady=4)
       self.nom2=tkr.StringVar()
       self.nom2.set(reg1[0][3])
@@ -327,7 +332,7 @@ class InformacionVecinos():
       self.entrynom2.grid(column=3, row=linea, padx=4, pady=4)
 
       linea+=1
-      self.lbl_ape=tkr.Label(self.labelframe1, text="1er Apellido:", bg="#FCFCF9")        
+      self.lbl_ape=tkr.Label(self.labelframe1, text="1er Apellido:", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.lbl_ape.grid(column=0, row=linea, padx=4, pady=4)
       self.apellido1=tkr.StringVar()
       self.apellido1.set(reg1[0][4])
@@ -335,7 +340,7 @@ class InformacionVecinos():
       self.entryapell1.bind("<FocusOut>", self.convertirMayus)
       self.entryapell1.grid(column=1, row=linea, padx=4, pady=4)
 
-      self.lbl_ape2=tkr.Label(self.labelframe1, text="2do Apellido:", bg="#FCFCF9")        
+      self.lbl_ape2=tkr.Label(self.labelframe1, text="2do Apellido:", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.lbl_ape2.grid(column=2, row=linea, padx=4, pady=4)
       self.apellido2=tkr.StringVar()
       self.apellido2.set(reg1[0][5])
@@ -344,14 +349,14 @@ class InformacionVecinos():
       self.entryapell2.grid(column=3, row=linea, padx=4, pady=4)
 
       linea+=1
-      self.lbl_tel1=tkr.Label(self.labelframe1, text="Nro Teléfono(1):", bg="#FCFCF9")        
+      self.lbl_tel1=tkr.Label(self.labelframe1, text="Nro Teléfono(1):", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.lbl_tel1.grid(column=0, row=linea, padx=4, pady=4)
       self.tel1=tkr.StringVar()
       self.tel1.set(reg1[0][8])
       self.entrytel1=tkr.Entry(self.labelframe1, textvariable=self.tel1)
       self.entrytel1.grid(column=1, row=linea, padx=4, pady=4)
 
-      self.lbl_tel2=tkr.Label(self.labelframe1, text="Nro Teléfono(2):", bg="#FCFCF9")        
+      self.lbl_tel2=tkr.Label(self.labelframe1, text="Nro Teléfono(2):", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.lbl_tel2.grid(column=2, row=linea, padx=4, pady=4)
       self.tel2=tkr.StringVar()
       self.tel2.set(reg1[0][9])
@@ -359,7 +364,7 @@ class InformacionVecinos():
       self.entrytel2.grid(column=3, row=linea, padx=4, pady=4)
 
       linea+=1
-      self.lbl_fecn=tkr.Label(self.labelframe1, text="Fecha de Nacimiento:", bg="#FCFCF9")        
+      self.lbl_fecn=tkr.Label(self.labelframe1, text="Fecha de Nacimiento:", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.lbl_fecn.grid(column=0, row=linea, padx=4, pady=4)
       self.fecn=tkr.StringVar()
       self.fecn.set(reg1[0][16])
@@ -380,7 +385,7 @@ class InformacionVecinos():
       #self.entryfecn.bind("<BackSpace>", lambda _: self.entryfecn.delete(tkr.END))
       self.entryfecn.grid(column=1, row=linea, padx=4, pady=4)
 
-      self.lbl_email=tkr.Label(self.labelframe1, text="Correo Electrónico:", bg="#FCFCF9")        
+      self.lbl_email=tkr.Label(self.labelframe1, text="Correo Electrónico:", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.lbl_email.grid(column=2, row=linea, padx=4, pady=4)
       self.email=tkr.StringVar()
       self.email.set(reg1[0][10])
@@ -388,7 +393,7 @@ class InformacionVecinos():
       self.entryemail.grid(column=3, row=linea, padx=4, pady=4)
       
       linea+=1
-      self.lbl_prof=tkr.Label(self.labelframe1, text="Oficio/Profesión:", bg="#FCFCF9")        
+      self.lbl_prof=tkr.Label(self.labelframe1, text="Oficio/Profesión:", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.lbl_prof.grid(column=0, row=linea, padx=4, pady=4)
       self.prof=tkr.StringVar()
       self.prof.set(reg1[0][17])
@@ -397,7 +402,7 @@ class InformacionVecinos():
       self.entryprof.grid(column=1, row=linea, padx=4, pady=4)
 
       linea+=1
-      self.lbl_sexo=tkr.Label(self.labelframe1, text="Femenino/Masculino:", bg="#FCFCF9")        
+      self.lbl_sexo=tkr.Label(self.labelframe1, text="Femenino/Masculino:", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e") 
       self.lbl_sexo.grid(column=0, row=linea, padx=4, pady=4)
       self.sexo=tkr.StringVar()
       self.sexo.set(reg1[0][26])      
@@ -421,10 +426,10 @@ class InformacionVecinos():
 
       #colocar la torre, piso, apto y grupo Familiar lista
 
-      self.lbl_edif=tkr.Label(top_frame, text="Edificio/Torre:", bg="#FCFCF9")        
+      self.lbl_edif=tkr.Label(top_frame, text="Edificio/Torre:", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.lbl_edif.grid(column=0, row=0, padx=4, pady=4)
       self.cmbedif=tkrttk.Combobox(top_frame, state="readonly")
-      self.cmbedif["value"]=self.registros.combo_add("TORRE")
+      self.cmbedif["value"]=self.registros.combo_add("TORRE", 1)
       self.cmbedif.set(string4)
       self.cmbedif.bind("<<ComboboxSelected>>", self.callbackFunc)
       self.cmbedif.grid(column=1, row=0, padx=4, pady=4)
@@ -445,15 +450,15 @@ class InformacionVecinos():
       string4=string3+str(reg1[0][14])
 
 
-      self.lbl_piso=tkr.Label(top_frame, text="Piso:", bg="#FCFCF9")        
+      self.lbl_piso=tkr.Label(top_frame, text="Piso:", bg=self.back1, fg=self.fore, font=self.tamagnoletra,width=20,anchor="e")
       self.lbl_piso.grid(column=0, row=1, padx=4, pady=4)
       self.cmbpiso=tkrttk.Combobox(top_frame, state="readonly")
-      self.cmbpiso["value"]=self.registros.combo_add("PISO")      
+      self.cmbpiso["value"]=self.registros.combo_add("PISO", 1)      
       self.cmbpiso.set(string4)
       self.cmbpiso.bind("<<ComboboxSelected>>", self.callbackFunc)
       self.cmbpiso.grid(column=1, row=1, padx=4, pady=4)
 
-      self.lbl_apto=tkr.Label(top_frame, text="Apartamento/Ubicación:", bg="#FCFCF9")        
+      self.lbl_apto=tkr.Label(top_frame, text="Apartamento/Ubicación:", bg=self.back1, fg=self.fore, font=self.tamagnoletra)
       self.lbl_apto.grid(column=0, row=2, padx=4, pady=4)
       self.apto=tkr.StringVar()
       self.apto.set(reg1[0][15])
@@ -479,16 +484,16 @@ class InformacionVecinos():
       string4=string3+str(reg1[0][6])
       #print(string4)  
 
-      self.labelframe4=tkr.LabelFrame(top_frame,bg="white")        
+      self.labelframe4=tkr.LabelFrame(top_frame,bg=self.back1)        
       self.labelframe4.grid(column=0, columnspan=2, row=3, padx=5, pady=10)
-      self.lblrol=tkr.Label(self.labelframe4, text="Rol en la Familia:",bg="white")        
+      self.lblrol=tkr.Label(self.labelframe4, text="Rol en la Familia:",bg=self.back1,fg=self.fore, font=self.tamagnoletra)
       self.lblrol.grid(column=0, row=0, padx=4, pady=4)
       self.cmbrol=tkrttk.Combobox(self.labelframe4, state="readonly")
-      self.cmbrol["value"]=self.registros.combo_add("MIEMBROS")      
+      self.cmbrol["value"]=self.registros.combo_add("MIEMBROS", 1)      
       self.cmbrol.set(string4)
       self.cmbrol.grid(column=1, row=0, padx=4, pady=4)
 
-      self.lbl_numfam=tkr.Label(self.labelframe4, text="Nro miembros en la Familia:",bg="white")        
+      self.lbl_numfam=tkr.Label(self.labelframe4, text="Nro miembros en la Familia:",bg=self.back1,fg=self.fore, font=self.tamagnoletra)        
       self.lbl_numfam.grid(column=0, row=1, padx=4, pady=4)
       self.num=tkr.IntVar()
       if reg1[0][23] == "":
@@ -496,7 +501,7 @@ class InformacionVecinos():
       query = "SELECT count(*) FROM vecinos_temporal tb1 where tb1.grupo_fam= %s" % reg1[0][23]
       string4=self.registros.obtener_cuantos(query)
       self.num.set(string4[0][0])
-      self.lbl_numfam_2=tkr.Label(self.labelframe4, textvariable=self.num, text=string4)
+      self.lbl_numfam_2=tkr.Label(self.labelframe4, textvariable=self.num, text=string4, bg=self.button1,fg=self.foreblack, font=self.tamagnoletra)
       self.lbl_numfam_2.grid(column=1, row=1, padx=4, pady=4)
 
       #crear listado de los que habian la residencia
@@ -518,13 +523,13 @@ class InformacionVecinos():
       self.listaTree_rol.grid(column=0, row=2, padx=4, pady=4)
 
       #Boton para actualizar la información
-      self.button1 = tkr.Button(self.pagina1,text='Actualizar', command=self.updateVec)
+      self.button1 = tkr.Button(self.pagina1,text='Actualizar', command=self.updateVec, highlightbackground=self.back1,bg=self.button1, fg=self.foreblack, font=self.tamagnoletra)
       self.button1.place(x=800, y=530, height=20)
 
-      self.button2 = tkr.Button(self.pagina1,text='Grabar', command=self.InsertVec)
+      self.button2 = tkr.Button(self.pagina1,text='Grabar', command=self.InsertVec,highlightbackground=self.back1,bg="#59c9b9", fg=self.foreblack, font=self.tamagnoletra)
       self.button2.place(x=900, y=530, height=20)
 
-      self.button3 = tkr.Button(self.pagina1,text='Nuevo Integrante', command=self.inicialiarVariables)
+      self.button3 = tkr.Button(self.pagina1,text='Nuevo Integrante', command=self.inicialiarVariables, highlightbackground=self.back1,bg="#59c9b9", fg=self.foreblack, font=self.tamagnoletra)
       self.button3.place(x=900, y=530, height=20)
 
       if self.vecino1 == 0:
@@ -534,7 +539,7 @@ class InformacionVecinos():
       if self.vecino1 != 0:
         self.button2.place_forget()        
 
-      self.button1 = tkr.Button(self.pagina1,text='Salir', command=self.volver)
+      self.button1 = tkr.Button(self.pagina1,text='Salir', command=self.volver, highlightbackground=self.back1,bg="#59c9b9", fg=self.foreblack, font=self.tamagnoletra)
       self.button1.place(x=680, y=530, height=20)
 
       #button1.grid(row=5, column=2)
@@ -551,12 +556,12 @@ class InformacionVecinos():
       reg = self.registros.listarVecinos(query)
       self.lista(reg, self.listaTree_rol)
 
-      self.pagina2 = tkr.Frame(self.cuaderno1,bg="white")
+      self.pagina2 = tkr.Frame(self.cuaderno1,bg=self.back1)
       self.cuaderno1.add(self.pagina2, text="Observaciones/Medicamentos/Antecedentes")
-      self.labelframe2=tkr.LabelFrame(self.pagina2, text=" ")        
+      self.labelframe2=tkr.LabelFrame(self.pagina2, bg=self.back1)        
       self.labelframe2.grid(column=0, row=0, padx=5, pady=10)
    
-      self.lbl_medicam=tkr.Label(self.labelframe2, text="Medicamentos:")        
+      self.lbl_medicam=tkr.Label(self.labelframe2, text="Medicamentos:",  bg=self.back1, fg=self.fore, font=self.tamagnoletra)
       self.lbl_medicam.grid(column=0, row=1, padx=4, pady=4)
       self.textmed=tkr.Text(self.labelframe2)
       self.textmed.config(width=130,height=10)
@@ -564,7 +569,7 @@ class InformacionVecinos():
       self.textmed.bind("<FocusOut>", self.convertirMayus)
       self.textmed.grid(column=1, row=1, padx=4, pady=4)
 
-      self.lbl_observa=tkr.Label(self.labelframe2, text="Observaciones:")        
+      self.lbl_observa=tkr.Label(self.labelframe2, text="Observaciones:", bg=self.back1, fg=self.fore, font=self.tamagnoletra)
       self.lbl_observa.grid(column=0, row=2, padx=4, pady=4)
       self.textobs=tkr.Text(self.labelframe2)
       self.textobs.config(width=130,height=10)
@@ -572,7 +577,7 @@ class InformacionVecinos():
       self.textobs.bind("<FocusOut>", self.convertirMayus)
       self.textobs.grid(column=1, row=2, padx=4, pady=4)
 
-      self.lbl_antece=tkr.Label(self.labelframe2, text="Antecedentes:")        
+      self.lbl_antece=tkr.Label(self.labelframe2, text="Antecedentes:", bg=self.back1, fg=self.fore, font=self.tamagnoletra)
       self.lbl_antece.grid(column=0, row=3, padx=4, pady=4)
       self.textant=tkr.Text(self.labelframe2)
       self.textant.config(width=130,height=10)
